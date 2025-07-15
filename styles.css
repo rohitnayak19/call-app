@@ -152,6 +152,17 @@ button.msg {
   cursor: pointer;
 }
 
+
+button.edit {
+  background: #eee;
+  color: black;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+}
+
 .form-container {
   display: none;
   position: absolute;
@@ -219,4 +230,23 @@ input[type="text"] {
   font-weight: 600;
   border-radius: 100px;
   text-transform: capitalize;
+}
+
+.title-info{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0px;
+}
+
+.card-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-top i{
+  font-size: large;
+  color: #555;
+  cursor: pointer;
 }

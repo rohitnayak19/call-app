@@ -184,6 +184,7 @@ function showToast(){
       homeTown: lastDeletedNote.homeTown,
       purpose: lastDeletedNote.purpose,
       selected: lastDeletedNote.selected,
+      date:lastDeletedNote.date
     })
     
     localStorage.setItem("tasks",JSON.stringify(alltasks))

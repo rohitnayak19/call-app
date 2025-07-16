@@ -116,7 +116,7 @@ transform: scale(1.2);
 
 h2 {
   font-size: 16px;
-  margin-bottom: 10px;
+  color: #393939;
 }
 
 .info {
@@ -248,5 +248,47 @@ input[type="text"] {
 .card-top i{
   font-size: large;
   color: #555;
+  cursor: pointer;
+}
+
+.date{
+  color: #555;
+  font-style: italic;
+  font-size: 14px;
+  background-color: #f2efef;
+  width: fit-content;
+  margin: 10px 0px;
+  display: block;
+}
+
+
+.undo-toast {
+  position: fixed;
+  bottom: -100px; /* hidden initially */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 9999;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.undo-toast.show {
+  bottom: 20px;
+  opacity: 1;
+}
+
+.undo-btn {
+  margin-left: 10px;
+  background: #fff;
+  color: #333;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
   cursor: pointer;
 }

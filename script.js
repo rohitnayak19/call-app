@@ -12,6 +12,9 @@ const homeTownInput = document.querySelector("#home-town");
 const purposeInput = document.querySelector("#purpose");
 const catergoryInput = document.querySelectorAll("input[name='category']");
 
+let lastDeletedNote = null;
+let undoTimer = null;
+
 addNote.addEventListener("click", () => {
   formContainer.style.display = "initial";
 });
@@ -38,6 +41,9 @@ form.addEventListener("submit", (e) => {
   const homeTown = homeTownInput.value.trim();
   const purpose = purposeInput.value.trim();
 
+   const date = new Date().toDateString();
+  console.log(date)
+
   let selected;
   catergoryInput.forEach((cat) => {
     if (cat.checked) {
@@ -49,7 +55,7 @@ form.addEventListener("submit", (e) => {
     return alert("Please fill all the fields!");
   }
 
-  const taskObj = { imageUrl, fullName, homeTown, purpose, selected };
+  const taskObj = { imageUrl, fullName, homeTown, purpose, selected, date};
   const editIndex = form.getAttribute("data-edit-index");
   const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
@@ -78,7 +84,7 @@ function showCards() {
     return;
   }
 
-  allTasks.forEach(({ fullName, homeTown, purpose, imageUrl }, index) => {
+  allTasks.forEach(({ fullName, homeTown, purpose, imageUrl, date }, index) => {
     stack.innerHTML += `
       <div class="card" data-index="${index}">
         <div class="card-top">
@@ -89,7 +95,8 @@ function showCards() {
             <i class="ri-delete-bin-line delete" data-index="${index}"></i>
           </div>
         </div>
-        <h2>${fullName}</h2>
+        <h2 class="fullName">${fullName}</h2>
+        <span class="date">${date}</span>
         <div class="info">
           <span>Home town</span>
           <span>${homeTown}</span>
@@ -138,16 +145,60 @@ function attachDeleteEvents() {
     btn.addEventListener("click", (e) => {
       const index = e.target.dataset.index;
       const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+      lastDeletedNote = {...tasks[index], index:index};
       tasks.splice(index, 1); // remove task
       localStorage.setItem("tasks", JSON.stringify(tasks));
+
+
       showCards();
       attachEditEvents();
       attachDeleteEvents();
+      showToast()
     });
   });
 }
 
-document.addEventListener("DOMContentLoaded", ()=>{
+function showToast(){
+  const undoToast= document.querySelector(".undo-toast");
+  const undoBtn = document.querySelector(".undo-btn");
+  undoToast.style.display = "block";
+
+  undoToast.classList.add("show")
+
+  if(undoTimer) clearTimeout(undoTimer);
+
+  undoTimer = setTimeout(() => {
+    undoToast.classList.remove("show")
+    clearTimeout(undoTimer)
+    lastDeletedNote = null;
+  }, 5000);
+
+  undoBtn.addEventListener("click", (e)=>{
+    if(lastDeletedNote){
+      const alltasks = JSON.parse(localStorage.getItem("tasks"));
+
+      alltasks.splice(lastDeletedNote.index, 0, {
+      imageUrl: lastDeletedNote.imageUrl,
+      fullName: lastDeletedNote.fullName,
+      homeTown: lastDeletedNote.homeTown,
+      purpose: lastDeletedNote.purpose,
+      selected: lastDeletedNote.selected,
+    })
+    
+    localStorage.setItem("tasks",JSON.stringify(alltasks))
+    }
+    lastDeletedNote=null;
+    showCards()
+    attachEditEvents()
+    attachDeleteEvents()
+    updateCard()
+
+    undoToast.classList.remove("show")
+    clearTimeout(undoTimer)
+  })
+}
+
  function updateCard() {
   const cards = document.querySelectorAll(".stack .card");
   cards.forEach((card, i) => {
@@ -182,11 +233,6 @@ downBtn.addEventListener("click", () => {
     updateCard()
   }
 });
-
-})
-
-
-
 // Initialize
 showCards();
 attachEditEvents();
